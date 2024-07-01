@@ -6,6 +6,9 @@ from sklearn.preprocessing import MinMaxScaler
 from ast import literal_eval
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+import json
+import requests
+
 
 # CSV 파일 로드
 df = pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/dict.csv')
@@ -103,10 +106,6 @@ else:
 # st.scatter_chart를 사용하여 산점도 그리기
 #st.scatter_chart(df2, x='tone_doc', y='baserate', color='date', x_label='tone_doc', y_label='baserate', use_container_width=True)
 
-import streamlit as st
-import pandas as pd
-import plotly.express as px
-
 # MPB 의사록 데이터를 로드 (예시로 임의의 데이터를 사용)
 # 여기서는 데이터가 없으므로 예시 데이터를 생성하여 사용합니다.
 # 실제 데이터를 사용할 때는 적절히 수정하여 사용하세요.
@@ -155,61 +154,27 @@ merge_df['tone_doc'] = merge_df['tone_doc'].apply(convert_to_float)
 
 
 
-def show_document_details(selected_date):
-    selected_docs = merge_df[merge_df['date'] == selected_date]
+df = pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/dict.csv')
+df2 = pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/merge_df (1).csv')  
 
-    if not selected_docs.empty:
-        for index, row in selected_docs.iterrows():
-            title = row['title']
-            st.subheader(title)
+hdict=pd.read_csv("/Users/trini.y/Downloads/hawkish_list.csv")
+hdict=pd.DataFrame(hdict)
 
-            for index, row in selected_docs.iterrows():
-        
-                polarity_score = row['tone_doc']
-                tone_label = 'Hawkish' if polarity_score > 0 else 'Dovish'
-                st.subheader(f"Polarity Score: {polarity_score} ({tone_label})")
+ddict=pd.read_csv("/Users/trini.y/Downloads/dovish_list.csv")
+ddict=pd.DataFrame(ddict)
 
-            content = row['content'].split('\n')
-            st.text_area('Content', '\n'.join(content[:5]), height=200)
+def convert_to_float(x):
+    try:
+        value = literal_eval(x)
+        if isinstance(value, list):
+            return float(value[0])
+        return float(value)
+    except (ValueError, SyntaxError):
+        return None
 
-            col1, col2 = st.columns(2)  # 2개의 컬럼으로 분할
-
-            ngrams = row['ngrams'].split('\n')
-            col1.text_area(f'Ngrams', '\n'.join(ngrams[:5]), height=330)
-
-            # Show h_cnt and d_cnt using Plotly bar chart
-            h_cnt = row['h_cnt']
-            d_cnt = row['d_cnt']
-
-            fig = go.Figure()
-
-            # 오른쪽 열: h_cnt와 d_cnt 막대 그래프
-            fig.add_trace(go.Bar(x=['Hawkish', 'Dovish'], y=[h_cnt, d_cnt],
-                                 marker_color=['red', 'blue']))  # h_cnt를 빨간색으로 설정
-
-            fig.update_layout(title=f'Hawkish vs Dovish Count',
-                              xaxis_title='Sentiment', yaxis_title='Count',
-                              showlegend=False,
-                              width=800, height=400)
-
-            # Plotly 차트를 Streamlit에 표시
-            col2.plotly_chart(fig)
-
-    else:
-        st.warning(f"No documents found for {selected_date}. Please select another date.")
-
-# Main Streamlit app code
-def main():
-    selected_date = st.sidebar.selectbox('날짜를 선택하세요.', merge_df['date'].unique())
-    show_document_details(selected_date)
-
-if __name__ == '__main__':
-    main()
-
-import json
-import requests
-import streamlit as st 
-import pandas as pd
+merge_df=pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/minutes_new_count.csv')
+merge_df=merge_df.drop(columns=['Unnamed: 0', 'split_content', 'tone_sentence'])
+merge_df['tone_doc'] = merge_df['tone_doc'].apply(convert_to_float)
 
 class CompletionExecutor:
     def __init__(self, host, api_key, api_key_primary_val, request_id):
@@ -234,48 +199,83 @@ class CompletionExecutor:
                     ret.append(line.decode("utf-8"))
         return ret
 
+def show_document_details(selected_date):
+    selected_docs = merge_df[merge_df['date'] == selected_date]
+
+    if not selected_docs.empty:
+        for index, row in selected_docs.iterrows():
+            title = row['title']
+            st.subheader(title)
+
+            polarity_score = row['tone_doc']
+            tone_label = 'Hawkish' if polarity_score > 0 else 'Dovish'
+            st.subheader(f"Polarity Score: {polarity_score} ({tone_label})")
+
+            col1, col2 = st.columns(2)
+            content = row['content'].split('\n')
+            col1.text_area('Content', '\n'.join(content[:5]), height=300)
+
+            completion_executor = CompletionExecutor(
+                host='https://clovastudio.stream.ntruss.com',
+                api_key='NTA0MjU2MWZlZTcxNDJiY6o7O0mMGUuTEHU6yLaRpv/2IkicvAMe/Pab0BKS5gW8',
+                api_key_primary_val='gIAB8vXgHEn5ZwAEgBHbnj6qZVa45KdMxz85pTjT',
+                request_id='85faed7a-d6fc-413b-8858-513aeaebe9f1'
+            )
+
+            col2.write('금통위 의사록 내용 요약')
+
+            minutes = row['content'][:500]
+
+            if minutes:
+                preset_text = [{"role": "system", "content": "- 데이터를 해독하고, 파싱하여 핵심 내용을 추출합니다."},
+                               {"role": "user", "content": minutes}]
+
+                request_data = {
+                    'messages': preset_text,
+                    'topP': 0.6,
+                    'topK': 0,
+                    'maxTokens': 500,
+                    'temperature': 0.1,
+                    'repeatPenalty': 1.2,
+                    'stopBefore': [],
+                    'includeAiFilters': True,
+                    'seed': 0
+                }
+
+                result = completion_executor.execute(request_data)
+                try:
+                    result_text = json.loads(result[-4][5:])['message']['content']
+                    col2.write(result_text)
+                except (IndexError, KeyError, json.JSONDecodeError) as e:
+                    col2.error("Error in processing the response from the API")
+
+            ngrams = row['ngrams'].split('\n')
+            col1.text_area(f'Ngrams', '\n'.join(ngrams[:5]), height=330)
+
+            # Show h_cnt and d_cnt using Plotly bar chart
+            h_cnt = row['h_cnt']
+            d_cnt = row['d_cnt']
+
+            fig = go.Figure()
+
+            # 오른쪽 열: h_cnt와 d_cnt 막대 그래프
+            fig.add_trace(go.Bar(x=['Hawkish', 'Dovish'], y=[h_cnt, d_cnt],
+                                 marker_color=['red', 'blue']))  # h_cnt를 빨간색으로 설정
+
+            fig.update_layout(title=f'Hawkish vs Dovish Count',
+                              xaxis_title='Sentiment', yaxis_title='Count',
+                              showlegend=False,
+                              width=800, height=400)
+
+            # Plotly 차트를 Streamlit에 표시
+            col2.plotly_chart(fig)
+    else:
+        st.warning(f"No documents found for {selected_date}. Please select another date.")
 
 if __name__ == '__main__':
-    completion_executor = CompletionExecutor(
-        host='https://clovastudio.stream.ntruss.com',
-        api_key='NTA0MjU2MWZlZTcxNDJiY6o7O0mMGUuTEHU6yLaRpv/2IkicvAMe/Pab0BKS5gW8',
-        api_key_primary_val='gIAB8vXgHEn5ZwAEgBHbnj6qZVa45KdMxz85pTjT',
-        request_id='85faed7a-d6fc-413b-8858-513aeaebe9f1'
-    )
-    
-    st.title('회의록 내용 요약')
-  
-    df=pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/minutes_test.csv', encoding='utf-8')
-    display=df.iloc[:,1]
-    options=df.iloc[:,3]
-    minutes=st.selectbox('조회할 회의록', options, format_func=lambda x: display[df.iloc[:, 3] == x].values[0])[:500]
+    # Streamlit code to select a date
+    dates = merge_df['date'].unique()
+    selected_date = st.sidebar.selectbox('Select a date', dates)
 
-    if minutes:
-        preset_text = [{"role":"system","content":"- 데이터를 해독하고, 파싱하여 핵심 내용을 추출합니다."},{"role":"user","content":minutes}]
-        
-        request_data = {
-            'messages': preset_text,
-            'topP': 0.6,
-            'topK': 0,
-            'maxTokens': 500,
-            'temperature': 0.1,
-            'repeatPenalty': 1.2,
-            'stopBefore': [],
-            'includeAiFilters': True,
-            'seed': 0
-        }
-
-        result = completion_executor.execute(request_data)
-        st.write(json.loads(result[-4][5:])['message']['content'])
-
-
-
-
-
-
-
-
-
-
-
-
+    if selected_date:
+        show_document_details(selected_date)
