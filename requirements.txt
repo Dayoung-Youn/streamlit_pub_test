@@ -1,9 +1,7 @@
 streamlit
 pandas
-numpy
-import streamlit as st                                                  
-import pandas as pd                                                     
-import plotly.express as px                                             
+numpy                                                                                                 
+import plotly.express as px                                            
 import altair as alt                                                    
 from sklearn.preprocessing import MinMaxScaler                          
 from ast import literal_eval  
