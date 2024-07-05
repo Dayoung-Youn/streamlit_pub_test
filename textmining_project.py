@@ -27,7 +27,7 @@ summary = (
 st.markdown(summary, unsafe_allow_html=True)
 
 st.header("Proportion of Corpus")
-corpus=pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/data.csv')
+corpus=pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/corpus.csv')
 
 def main():
     #st.title("자료별 비중을 나타내는 원형 차트")
