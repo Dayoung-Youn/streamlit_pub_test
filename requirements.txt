@@ -1,8 +1,10 @@
-pip==24.1.1
 pandas
 numpy                                                                                                 
 plotly                                          
 altair                                                   
-scikit-learn==0.24.2
-streamlit==1.36.0
+scikit-learn
+streamlit
 requests
+json
+ast
+matplotlib
