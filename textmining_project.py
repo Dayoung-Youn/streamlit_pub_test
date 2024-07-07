@@ -7,7 +7,7 @@ from ast import literal_eval
 
 
 # 사이드바에 페이지 선택 옵션 설정
-page = st.sidebar.selectbox("페이지 선택", ["textmining project", "dictionary", "mpb tone and BOK baserate"])
+page = st.sidebar("페이지 선택", ["textmining project", "dictionary", "mpb tone and BOK baserate"])
 
 # 각 페이지에 대한 내용 설정
 if page == "textmining project":
