@@ -27,7 +27,7 @@ summary = (
 st.markdown(summary, unsafe_allow_html=True)
 
 st.header("Proportion of Corpus")
-corpus=pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/corpus.csv')
+corpus=pd.read_csv('corpus.csv')
 
 def main():
     #st.title("자료별 비중을 나타내는 원형 차트")
@@ -56,7 +56,7 @@ col1, col2 = st.columns(2)
 col2.metric(label="hawkish dictionary", value="1950개")
 col1.metric(label="dovish dictionary", value="3031개")
 
-hdict=pd.read_csv("/Users/trini.y/streamlit_new/textmining_project/pages/hawkish_re_list.csv")
+hdict=pd.read_csv("hawkish_re_list.csv")
 df1=pd.DataFrame(hdict)
 df1=df1.drop(columns=['Unnamed: 0', 'count_down'])
 df1 =df1.rename(columns={'count_up': 'count_hawkish'})
@@ -64,7 +64,7 @@ df1.to_string(index=False)
 
 col2.dataframe(df1)
 
-ddict=pd.read_csv("/Users/trini.y/streamlit_new/textmining_project/pages/dovish_re_list.csv")
+ddict=pd.read_csv("dovish_re_list.csv")
 ddict=pd.DataFrame(ddict)
 ddict=ddict.drop(columns=['Unnamed: 0', 'count_up'])
 ddict = ddict.rename(columns={'count_down': 'count_dovish'})
@@ -72,7 +72,7 @@ ddict = ddict.rename(columns={'count_down': 'count_dovish'})
 col1.dataframe(ddict)
 
 # CSV 파일 로드
-df_dict = pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/dict.csv')
+df_dict = pd.read_csv('dict.csv')
 df_dict = df_dict.rename(columns={'count_up': 'count_hawkish', 'count_down': 'count_dovish'})
 df_dict=df_dict.drop(columns=['polarity_score'])
 dict=pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/dict.csv')
@@ -105,7 +105,7 @@ if search_word:
 
 
 #산점도 그래프
-df2 = pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/merge_df (1).csv')  
+df2 = pd.read_csv('merge_df (1).csv')  
 
 # 문자열을 float으로 변환하는 함수
 def convert_to_float(x):
