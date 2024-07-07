@@ -88,13 +88,30 @@ else:
     default_date = datetime.date(2024, 5, 23)
     if default_date < min_date or default_date > max_date:
         default_date = min_date 
-    
-    start_date = col1.date_input("시작 날짜", min_value=pd.Timestamp(df2['date'].min()).date(), max_value=pd.Timestamp(df2['date'].max()).date())
-    end_date = col2.date_input("종료 날짜", min_value=pd.Timestamp(df2['date'].min()).date(), max_value=pd.Timestamp(df2['date'].max()).date())
 
-    # Filter data based on selected date range
+    start_date = col1.date_input("시작 날짜", 
+                             value=default_date,  # 기본값 설정
+                             min_value=min_date, 
+                             max_value=max_date)
+
+    # 종료 날짜 선택기 설정
+    end_date = col2.date_input("종료 날짜", 
+                               value=default_date,  # 기본값 설정
+                               min_value=min_date, 
+                               max_value=max_date)
+
+
+    # 데이터프레임 필터링을 위한 마스크 생성
     mask = (df2['date'] >= pd.Timestamp(start_date)) & (df2['date'] <= pd.Timestamp(end_date))
     filtered_df = df2.loc[mask]
+
+    
+    #start_date = col1.date_input("시작 날짜", min_value=pd.Timestamp(df2['date'].min()).date(), max_value=pd.Timestamp(df2['date'].max()).date())
+    #end_date = col2.date_input("종료 날짜", min_value=pd.Timestamp(df2['date'].min()).date(), max_value=pd.Timestamp(df2['date'].max()).date())
+
+    # Filter data based on selected date range
+    #mask = (df2['date'] >= pd.Timestamp(start_date)) & (df2['date'] <= pd.Timestamp(end_date))
+    #filtered_df = df2.loc[mask]
 
     # Line chart with tone_doc and baserate over time
     fig = px.line(filtered_df, x='date', y=['tone_doc', 'baserate'],
