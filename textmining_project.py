@@ -6,6 +6,20 @@ from sklearn.preprocessing import MinMaxScaler
 from ast import literal_eval
 
 
+# 사이드바에 페이지 선택 옵션 설정
+page = st.sidebar.selectbox("페이지 선택", ["textmining project", "dictionary", "mpb tone and BOK baserate"])
+
+# 각 페이지에 대한 내용 설정
+if page == "textmining project":
+    st.header("textmining project")
+    # 페이지 1 내용 설정
+elif page == "dictionary":
+    st.header("dictionary")
+    # 페이지 2 내용 설정
+elif page == "mpb tone and BOK baserate":
+    st.header("mpb tone and BOK baserate")
+    # 페이지 3 내용 설정
+
 st.title("TEXTMINING PROJECT")
 
 st.header("Summary")
