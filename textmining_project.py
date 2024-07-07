@@ -75,7 +75,7 @@ col1.dataframe(ddict)
 df_dict = pd.read_csv('dict.csv')
 df_dict = df_dict.rename(columns={'count_up': 'count_hawkish', 'count_down': 'count_dovish'})
 df_dict=df_dict.drop(columns=['polarity_score'])
-dict=pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/dict.csv')
+dict=pd.read_csv('dict.csv')
 
 
 # 사용자 입력을 받는 섹션
