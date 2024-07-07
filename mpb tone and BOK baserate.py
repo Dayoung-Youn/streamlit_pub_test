@@ -153,21 +153,6 @@ merge_df['tone_doc'] = merge_df['tone_doc'].apply(convert_to_float)
 #     st.warning(f"No documents found for {selected_date}. Please select another date.")
 
 
-
-
-hdict=pd.DataFrame(hdict)
-
-ddict=pd.DataFrame(ddict)
-
-def convert_to_float(x):
-    try:
-        value = literal_eval(x)
-        if isinstance(value, list):
-            return float(value[0])
-        return float(value)
-    except (ValueError, SyntaxError):
-        return None
-
 merge_df=pd.read_csv('minutes_new_count.csv')
 merge_df=merge_df.drop(columns=['Unnamed: 0', 'split_content', 'tone_sentence'])
 merge_df['tone_doc'] = merge_df['tone_doc'].apply(convert_to_float)
