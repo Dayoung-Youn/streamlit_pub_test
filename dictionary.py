@@ -26,6 +26,9 @@ ddict = ddict.rename(columns={'count_down': 'count_dovish'})
 min_score = df1['polarity_score'].min()
 max_score = df1['polarity_score'].max()
 
+min_score = float(min_score)
+max_score = float(max_score)
+
     # 슬라이더 설정
 score_range = col2.slider("확인하고 싶은 극성점수의 범주를 설정하세요.", min_value=min_score, max_value=max_score, value=(min_score, max_score), step=0.1)
 
