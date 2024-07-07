@@ -84,7 +84,7 @@ else:
     col1, col2=st.columns(2)
     # Date range selection
     if default_date < min_date or default_date > max_date:
-    default_date = min_date 
+        default_date = min_date 
     
     start_date = col1.date_input("시작 날짜", min_value=pd.Timestamp(df2['date'].min()).date(), max_value=pd.Timestamp(df2['date'].max()).date())
     end_date = col2.date_input("종료 날짜", min_value=pd.Timestamp(df2['date'].min()).date(), max_value=pd.Timestamp(df2['date'].max()).date())
