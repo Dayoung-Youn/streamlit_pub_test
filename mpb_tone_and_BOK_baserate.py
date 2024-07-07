@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import json
 import requests
-
+import datetime
 
 # CSV 파일 로드
 df = pd.read_csv('dict.csv')
@@ -83,6 +83,7 @@ else:
 
     col1, col2=st.columns(2)
     # Date range selection
+    default_date = datetime.date(2024, 5, 23)
     if default_date < min_date or default_date > max_date:
         default_date = min_date 
     
