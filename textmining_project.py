@@ -6,19 +6,21 @@ from sklearn.preprocessing import MinMaxScaler
 from ast import literal_eval
 
 # 사이드바에 페이지 선택 옵션 설정
-page = st.sidebar(["textmining_project", "dictionary", "mpk_tone_and_BOK_baserate"])
+st.sidebar.markdown("[textmining](https://textminingproject.streamlit.app)")
+st.sidebar.markdown("[dictionary](https://textminingdictionary.streamlit.app)")
+st.sidebar.markdown("[MPK tone and BOK baserate](https://mpbtonebokbaserate.streamlit.app)")
 
 # 각 페이지로의 URL 설정
-if page == "textmining_project":
-    st.markdown(f"### [Go to Dictionary](https://textminingdictionary.streamlit.app)")
-    st.markdown(f"### [Go to MPK Tone and BOK Baserate](https://mpbtonebokbaserate.streamlit.app)")
-elif page == "dictionary":
-    st.markdown(f"### [Go to Text Mining Project](https://textminingdictionary.streamlit.app)")
-    st.markdown(f"### [Go to MPK Tone and BOK Baserate](https://mpbtonebokbaserate.streamlit.app)")
-elif page == "mpk_tone_and_BOK_baserate":
-    st.markdown(f"## MPK Tone and BOK Baserate Page")
-    st.markdown(f"### [Go to Text Mining Project](https://textminingproject.streamlit.app)")
-    st.markdown(f"### [Go to Dictionary](https://textminingdictionary.streamlit.app)")
+# if page == "textmining_project":
+#     st.markdown(f"### [Go to Dictionary](https://textminingdictionary.streamlit.app)")
+#     st.markdown(f"### [Go to MPK Tone and BOK Baserate](https://mpbtonebokbaserate.streamlit.app)")
+# elif page == "dictionary":
+#     st.markdown(f"### [Go to Text Mining Project](https://textminingdictionary.streamlit.app)")
+#     st.markdown(f"### [Go to MPK Tone and BOK Baserate](https://mpbtonebokbaserate.streamlit.app)")
+# elif page == "mpk_tone_and_BOK_baserate":
+#     st.markdown(f"## MPK Tone and BOK Baserate Page")
+#     st.markdown(f"### [Go to Text Mining Project](https://textminingproject.streamlit.app)")
+#     st.markdown(f"### [Go to Dictionary](https://textminingdictionary.streamlit.app)")
 
 
 st.title("TEXTMINING PROJECT")
