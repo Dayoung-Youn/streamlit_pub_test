@@ -20,8 +20,6 @@ ddict=pd.DataFrame(ddict)
 ddict=ddict.drop(columns=['count_up'])
 ddict = ddict.rename(columns={'count_down': 'count_dovish'})
 
-#col1.dataframe(ddict)
-
     # polarity score의 최소값과 최대값 확인
 min_score = df1['polarity_score'].min()
 max_score = df1['polarity_score'].max()
@@ -44,14 +42,12 @@ else:
 
 
 
-
-
-
-#col1.header("Dovish Dictionary Filter")
-
     # polarity score의 최소값과 최대값 확인
 min_score = ddict['polarity_score'].min()
 max_score = ddict['polarity_score'].max()
+
+min_score = float(min_score)
+max_score = float(max_score)
 
     # 슬라이더 설정
 score_range = col1.slider("확인하고 싶은 극성점수의 범주를 설정하세요.", min_value=min_score, max_value=max_score, value=(min_score, max_score), step=0.1)
@@ -65,7 +61,6 @@ if not filtered_df.empty:
     col1.write(filtered_df)
 else:
     col1.subheader("선택된 범주 내의 극성점수에 해당하는 단어가 없습니다.")
-
 
 
 
