@@ -1,9 +1,8 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 
 st.title("Dictionary Filter")
-
-
 
 col1, col2 = st.columns(2)
  # Streamlit 웹 페이지 제목
@@ -65,11 +64,6 @@ else:
     col1.subheader("선택된 범주 내의 극성점수에 해당하는 단어가 없습니다.")
 
 
-
-
-import streamlit as st
-import pandas as pd
-import plotly.express as px
 
 
 # count_hawkish와 count_dovish 값을 바탕으로 상위 10개 단어 추출
