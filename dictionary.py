@@ -79,11 +79,11 @@ st.header("사전별 빈도수 상위 10개 ngram")
 col1, col2 = st.columns(2)
 
 col1.subheader("Dovish ngram")
-fig_dovish = px.bar(top_10_dovish, x='words', y='count_dovish', title='Top 10 Dovish Words', labels={'count_dovish': 'Dovish Count', 'words': 'Words'})
+fig_dovish = px.bar(top_10_dovish, x='words', y='count_dovish', title='Top 10 Dovish Words', width= 400, labels={'count_dovish': 'Dovish Count', 'words': 'Words'})
 col1.plotly_chart(fig_dovish)
 
 col2.subheader("Hawkish ngram")
-fig_hawkish = px.bar(top_10_hawkish, x='words', y='count_hawkish', title='Top 10 Hawkish Words', labels={'count_hawkish': 'Hawkish Count', 'words': 'Words'})
+fig_hawkish = px.bar(top_10_hawkish, x='words', y='count_hawkish', title='Top 10 Hawkish Words', width=400, labels={'count_hawkish': 'Hawkish Count', 'words': 'Words'})
 fig_hawkish.update_traces(marker_color='red')
 col2.plotly_chart(fig_hawkish)
 
