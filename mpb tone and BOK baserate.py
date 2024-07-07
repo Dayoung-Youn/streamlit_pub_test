@@ -154,13 +154,9 @@ merge_df['tone_doc'] = merge_df['tone_doc'].apply(convert_to_float)
 
 
 
-df = pd.read_csv('dict.csv')
-df2 = pd.read_csv('merge_df (1).csv')  
 
-hdict=pd.read_csv("hawkish_list.csv")
 hdict=pd.DataFrame(hdict)
 
-ddict=pd.read_csv("dovish_list.csv")
 ddict=pd.DataFrame(ddict)
 
 def convert_to_float(x):
