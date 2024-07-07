@@ -10,6 +10,9 @@ import json
 import requests
 import datetime
 
+
+
+
 # CSV 파일 로드
 df = pd.read_csv('dict.csv')
 df2 = pd.read_csv('merge_df (1).csv')  
