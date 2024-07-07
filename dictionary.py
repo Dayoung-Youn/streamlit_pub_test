@@ -7,7 +7,7 @@ st.title("Dictionary Filter")
 col1, col2 = st.columns(2)
  # Streamlit 웹 페이지 제목
 col2.header("Hawkish Dictionary")
-hdict=pd.read_csv("/Users/trini.y/Downloads/hawkish_list.csv")
+hdict=pd.read_csv("hawkish_list.csv")
 df1=pd.DataFrame(hdict)
 df1=df1.drop(columns=['count_down'])
 df1 =df1.rename(columns={'count_up': 'count_hawkish'})
