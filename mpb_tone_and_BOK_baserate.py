@@ -220,7 +220,7 @@ def show_document_details(selected_date):
             fig.update_layout(title=f'Hawkish vs Dovish Count',
                               xaxis_title='Sentiment', yaxis_title='Count',
                               showlegend=False,
-                              width=800, height=400)
+                              width=400, height=400)
 
             # Plotly 차트를 Streamlit에 표시
             col2.plotly_chart(fig)
