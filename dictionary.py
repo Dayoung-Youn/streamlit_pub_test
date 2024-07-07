@@ -15,7 +15,7 @@ df1.to_string(index=False)
 #col2.dataframe(df1)
 
 col1.header("Dovish Dictionary")
-ddict=pd.read_csv("/Users/trini.y/Downloads/dovish_list.csv")
+ddict=pd.read_csv("dovish_list.csv")
 ddict=pd.DataFrame(ddict)
 ddict=ddict.drop(columns=['count_up'])
 ddict = ddict.rename(columns={'count_down': 'count_dovish'})
