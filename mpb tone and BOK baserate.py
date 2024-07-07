@@ -11,13 +11,13 @@ import requests
 
 
 # CSV 파일 로드
-df = pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/dict.csv')
-df2 = pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/merge_df (1).csv')  
+df = pd.read_csv('dict.csv')
+df2 = pd.read_csv('merge_df (1).csv')  
 
-hdict=pd.read_csv("/Users/trini.y/Downloads/hawkish_list.csv")
+hdict=pd.read_csv("hawkish_list.csv")
 hdict=pd.DataFrame(hdict)
 
-ddict=pd.read_csv("/Users/trini.y/Downloads/dovish_list.csv")
+ddict=pd.read_csv("dovish_list.csv")
 ddict=pd.DataFrame(ddict)
 
 #df2['tone_doc'] = pd.to_numeric(df2['tone_doc'], errors='coerce')
@@ -118,7 +118,7 @@ else:
 #selected_doc = df2[df2['date'] == selected_date]
 
 # 선택된 문서의 극성점수 시각화
-merge_df=pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/minutes_new_count.csv')
+merge_df=pd.read_csv('minutes_new_count.csv')
 merge_df=merge_df.drop(columns=['Unnamed: 0', 'split_content', 'tone_sentence'])
 merge_df['tone_doc'] = merge_df['tone_doc'].apply(convert_to_float)
 #st.dataframe(merge_df)
@@ -154,13 +154,13 @@ merge_df['tone_doc'] = merge_df['tone_doc'].apply(convert_to_float)
 
 
 
-df = pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/dict.csv')
-df2 = pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/merge_df (1).csv')  
+df = pd.read_csv('dict.csv')
+df2 = pd.read_csv('merge_df (1).csv')  
 
-hdict=pd.read_csv("/Users/trini.y/Downloads/hawkish_list.csv")
+hdict=pd.read_csv("hawkish_list.csv")
 hdict=pd.DataFrame(hdict)
 
-ddict=pd.read_csv("/Users/trini.y/Downloads/dovish_list.csv")
+ddict=pd.read_csv("dovish_list.csv")
 ddict=pd.DataFrame(ddict)
 
 def convert_to_float(x):
@@ -172,7 +172,7 @@ def convert_to_float(x):
     except (ValueError, SyntaxError):
         return None
 
-merge_df=pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/minutes_new_count.csv')
+merge_df=pd.read_csv('minutes_new_count.csv')
 merge_df=merge_df.drop(columns=['Unnamed: 0', 'split_content', 'tone_sentence'])
 merge_df['tone_doc'] = merge_df['tone_doc'].apply(convert_to_float)
 
