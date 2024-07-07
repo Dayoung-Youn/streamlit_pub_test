@@ -27,27 +27,27 @@ summary = (
 st.markdown(summary, unsafe_allow_html=True)
 
 st.header("Proportion of Corpus")
-# corpus=pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/corpus.csv')
+corpus=pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/corpus.csv')
 
-# def main():
-#     #st.title("자료별 비중을 나타내는 원형 차트")
+def main():
+    #st.title("자료별 비중을 나타내는 원형 차트")
 
-#     # Plotly를 사용하여 원형 차트 생성
-#     fig = px.pie(corpus, values='파일의 수', names='파일 유형')
-#     colors = {
-#         'news': 'lightgreen',  # 연두색
-#         'mpb': 'yellow',       # 노란색
-#         'financial report': 'lightblue'}
+    # Plotly를 사용하여 원형 차트 생성
+    fig = px.pie(corpus, values='파일의 수', names='파일 유형')
+    colors = {
+        'news': 'lightgreen',  # 연두색
+        'mpb': 'yellow',       # 노란색
+        'financial report': 'lightblue'}
 
-#     # 각 자료명에 대해 색상 설정
-#     fig.update_traces(marker=dict(colors=[colors[name] for name in corpus['파일 유형']]))
+    # 각 자료명에 대해 색상 설정
+    fig.update_traces(marker=dict(colors=[colors[name] for name in corpus['파일 유형']]))
 
 
-#     # Streamlit을 사용하여 차트 표시
-#     st.plotly_chart(fig, use_container_width=True)
+    # Streamlit을 사용하여 차트 표시
+    st.plotly_chart(fig, use_container_width=True)
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    main()
 
 #단어사전 개요
 st.header("Word Dictionary")
@@ -56,7 +56,7 @@ col1, col2 = st.columns(2)
 col2.metric(label="hawkish dictionary", value="1950개")
 col1.metric(label="dovish dictionary", value="3031개")
 
-hdict=pd.read_csv("/Users/trini.y/streamlit_new/textmining_project/pages/dovish_re_list.csv")
+hdict=pd.read_csv("/Users/trini.y/streamlit_new/textmining_project/pages/hawkish_re_list.csv")
 df1=pd.DataFrame(hdict)
 df1=df1.drop(columns=['Unnamed: 0', 'count_down'])
 df1 =df1.rename(columns={'count_up': 'count_hawkish'})
@@ -70,9 +70,6 @@ ddict=ddict.drop(columns=['Unnamed: 0', 'count_up'])
 ddict = ddict.rename(columns={'count_down': 'count_dovish'})
 
 col1.dataframe(ddict)
-
-import streamlit as st
-import pandas as pd
 
 # CSV 파일 로드
 df_dict = pd.read_csv('/Users/trini.y/streamlit_new/textmining_project/pages/dict.csv')
