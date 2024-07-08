@@ -39,7 +39,7 @@ df2 = df2.dropna(subset=['tone_doc', 'baserate'])
 scaler = MinMaxScaler()
 df2[['tone_doc', 'baserate']] = scaler.fit_transform(df2[['tone_doc', 'baserate']])
 
-tab1, tab2 = st.tabs(['전체차트', '기간별 차트'])
+tab1, tab2 = st.tabs(['전체 차트', '기간별 차트'])
 
 if df2.empty:
     st.error("DataFrame is empty after dropping NaN values. Please check your data.")
