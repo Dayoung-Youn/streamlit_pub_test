@@ -21,12 +21,6 @@ hdict=pd.DataFrame(hdict)
 ddict=pd.read_csv("dovish_list.csv")
 ddict=pd.DataFrame(ddict)
 
-#df2['tone_doc'] = pd.to_numeric(df2['tone_doc'], errors='coerce')
-#df2['baserate'] = pd.to_numeric(df2['baserate'], errors='coerce')
-
-#df2['tone_doc'].fillna(df2['tone_doc'].median(), inplace=True)
-#df2['baserate'].fillna(df2['baserate'].median(), inplace=True)
-
 def convert_to_float(x):
     try:
         value = literal_eval(x)
@@ -37,11 +31,9 @@ def convert_to_float(x):
         return None
 
 df2['tone_doc'] = df2['tone_doc'].apply(convert_to_float)
-#df2['baserate'] = pd.to_numeric(df2['baserate'], errors='coerce')
 
 # NaN 값 제거 또는 처리 (예: NaN 값이 있는 행 제거)
 df2 = df2.dropna(subset=['tone_doc', 'baserate'])
-
 
 # Min-Max 정규화
 scaler = MinMaxScaler()
@@ -51,39 +43,22 @@ df2[['tone_doc', 'baserate']] = scaler.fit_transform(df2[['tone_doc', 'baserate'
 if df2.empty:
     st.error("DataFrame is empty after dropping NaN values. Please check your data.")
 else:
-    # Min-Max 정규화
-    #scaler = MinMaxScaler()
-    #df2[['tone_doc', 'baserate']] = scaler.fit_transform(df2[['tone_doc', 'baserate']])
-
-
     # 날짜 흐름에 따른 doc_tone과 base_rate의 선 그래프
     st.header('금통위의사록 어조와 기준금리 변화')
-    # 데이터를 시간 순서로 정렬
     df2 = df2.sort_values(by='date')
-   # 인덱스로 설정하기 전에 원래 상태 유지
     df2.reset_index(drop=True, inplace=True)
 
     # st.line_chart를 사용하여 선 그래프 그리기
     st.line_chart(df2[['date', 'tone_doc', 'baserate']].set_index('date'), use_container_width=True)
 
-    # 데이터 프레임 출력 (디버깅용)
     #st.write(df2[['date', 'tone_doc', 'baserate']])
 
     #기간 선택
-    # Convert date format
     df2['date'] = pd.to_datetime(df2['date'], format='%Y-%m-%d')
 
-    # Sort data by date
-    df2 = df2.sort_values(by='date')
-
-    # Reset index
-    df2.reset_index(drop=True, inplace=True)
-
-    # Streamlit app title
     #st.title('금통위의사록 어조와 기준금리 변화')
 
     col1, col2=st.columns(2)
-    # Date range selection
     min_date = datetime.date(2014, 3, 13)
     max_date = datetime.date(2024, 5, 23)
     default_date = datetime.date(2024, 5, 23)
@@ -91,13 +66,12 @@ else:
         default_date = min_date 
 
     start_date = col1.date_input("시작 날짜", 
-                             value=default_date,  # 기본값 설정
+                             value=default_date, 
                              min_value=min_date, 
                              max_value=max_date)
 
-    # 종료 날짜 선택기 설정
     end_date = col2.date_input("종료 날짜", 
-                               value=default_date,  # 기본값 설정
+                               value=default_date, 
                                min_value=min_date, 
                                max_value=max_date)
 
@@ -106,19 +80,8 @@ else:
     mask = (df2['date'] >= pd.Timestamp(start_date)) & (df2['date'] <= pd.Timestamp(end_date))
     filtered_df = df2.loc[mask]
 
-    
-    #start_date = col1.date_input("시작 날짜", min_value=pd.Timestamp(df2['date'].min()).date(), max_value=pd.Timestamp(df2['date'].max()).date())
-    #end_date = col2.date_input("종료 날짜", min_value=pd.Timestamp(df2['date'].min()).date(), max_value=pd.Timestamp(df2['date'].max()).date())
-
-    # Filter data based on selected date range
-    #mask = (df2['date'] >= pd.Timestamp(start_date)) & (df2['date'] <= pd.Timestamp(end_date))
-    #filtered_df = df2.loc[mask]
-
-    # Line chart with tone_doc and baserate over time
     fig = px.line(filtered_df, x='date', y=['tone_doc', 'baserate'],
                   labels={'value': '값', 'date': '날짜', 'variable': '변수'}, title='기간별 금통위의사록 어조와 기준금리 변화')
-
-    # Plotly chart with Streamlit
     st.plotly_chart(fig, use_container_width=True)
 
 
@@ -202,22 +165,18 @@ def show_document_details(selected_date):
             ngrams = row['ngrams'].split('\n')
             col1.text_area(f'Ngrams', '\n'.join(ngrams[:5]), height=330)
 
-            # Show h_cnt and d_cnt using Plotly bar chart
             h_cnt = row['h_cnt']
             d_cnt = row['d_cnt']
 
             fig = go.Figure()
-
-            # 오른쪽 열: h_cnt와 d_cnt 막대 그래프
             fig.add_trace(go.Bar(x=['Hawkish', 'Dovish'], y=[h_cnt, d_cnt],
                                  marker_color=['red', 'blue']))  # h_cnt를 빨간색으로 설정
 
             fig.update_layout(title=f'Hawkish vs Dovish Count',
                               xaxis_title='Sentiment', yaxis_title='Count',
                               showlegend=False,
-                              width=380, height=400)
+                              width=360, height=400)
 
-            # Plotly 차트를 Streamlit에 표시
             col2.plotly_chart(fig)
     else:
         st.warning(f"No documents found for {selected_date}. Please select another date.")
@@ -225,7 +184,7 @@ def show_document_details(selected_date):
 if __name__ == '__main__':
     # Streamlit code to select a date
     dates = merge_df['date'].unique()
-    selected_date = st.sidebar.selectbox('Select a date', dates)
+    selected_date = st.sidebar.selectbox('날짜를 선택하세요', dates)
 
     if selected_date:
         show_document_details(selected_date)
