@@ -6,6 +6,12 @@ from sklearn.preprocessing import MinMaxScaler
 from ast import literal_eval
 
 
+# 사이드바에 페이지 선택 옵션 설정
+st.sidebar.markdown("[textmining](https://textminingproject.streamlit.app)")
+st.sidebar.markdown("[dictionary](https://textminingdictionary.streamlit.app)")
+st.sidebar.markdown("[MPK tone and BOK baserate](https://mpbtonebokbaserate.streamlit.app)")
+
+
 st.title("TEXTMINING PROJECT")
 
 st.header("Summary")

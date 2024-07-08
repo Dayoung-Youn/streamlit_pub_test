@@ -8,6 +8,12 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import json
 import requests
+import datetime
+
+# 사이드바에 페이지 선택 옵션 설정
+st.sidebar.markdown("[textmining](https://textminingproject.streamlit.app)")
+st.sidebar.markdown("[dictionary](https://textminingdictionary.streamlit.app)")
+st.sidebar.markdown("[MPK tone and BOK baserate](https://mpbtonebokbaserate.streamlit.app)")
 
 
 # CSV 파일 로드
@@ -83,12 +89,35 @@ else:
 
     col1, col2=st.columns(2)
     # Date range selection
-    start_date = col1.date_input("시작 날짜", min_value=pd.Timestamp(df2['date'].min()).date(), max_value=pd.Timestamp(df2['date'].max()).date())
-    end_date = col2.date_input("종료 날짜", min_value=pd.Timestamp(df2['date'].min()).date(), max_value=pd.Timestamp(df2['date'].max()).date())
+    min_date = datetime.date(2014, 3, 13)
+    max_date = datetime.date(2024, 5, 23)
+    default_date = datetime.date(2024, 5, 23)
+    if default_date < min_date or default_date > max_date:
+        default_date = min_date 
 
-    # Filter data based on selected date range
+    start_date = col1.date_input("시작 날짜", 
+                             value=default_date,  # 기본값 설정
+                             min_value=min_date, 
+                             max_value=max_date)
+
+    # 종료 날짜 선택기 설정
+    end_date = col2.date_input("종료 날짜", 
+                               value=default_date,  # 기본값 설정
+                               min_value=min_date, 
+                               max_value=max_date)
+
+
+    # 데이터프레임 필터링을 위한 마스크 생성
     mask = (df2['date'] >= pd.Timestamp(start_date)) & (df2['date'] <= pd.Timestamp(end_date))
     filtered_df = df2.loc[mask]
+
+    
+    #start_date = col1.date_input("시작 날짜", min_value=pd.Timestamp(df2['date'].min()).date(), max_value=pd.Timestamp(df2['date'].max()).date())
+    #end_date = col2.date_input("종료 날짜", min_value=pd.Timestamp(df2['date'].min()).date(), max_value=pd.Timestamp(df2['date'].max()).date())
+
+    # Filter data based on selected date range
+    #mask = (df2['date'] >= pd.Timestamp(start_date)) & (df2['date'] <= pd.Timestamp(end_date))
+    #filtered_df = df2.loc[mask]
 
     # Line chart with tone_doc and baserate over time
     fig = px.line(filtered_df, x='date', y=['tone_doc', 'baserate'],
@@ -102,106 +131,106 @@ merge_df=pd.read_csv('minutes_new_count.csv')
 merge_df=merge_df.drop(columns=['Unnamed: 0', 'split_content', 'tone_sentence'])
 merge_df['tone_doc'] = merge_df['tone_doc'].apply(convert_to_float)
 
-# class CompletionExecutor:
-#     def __init__(self, host, api_key, api_key_primary_val, request_id):
-#         self._host = host
-#         self._api_key = api_key
-#         self._api_key_primary_val = api_key_primary_val
-#         self._request_id = request_id
+class CompletionExecutor:
+    def __init__(self, host, api_key, api_key_primary_val, request_id):
+        self._host = host
+        self._api_key = api_key
+        self._api_key_primary_val = api_key_primary_val
+        self._request_id = request_id
 
-#     def execute(self, completion_request):
-#         headers = {
-#             'X-NCP-CLOVASTUDIO-API-KEY': self._api_key,
-#             'X-NCP-APIGW-API-KEY': self._api_key_primary_val,
-#             'X-NCP-CLOVASTUDIO-REQUEST-ID': self._request_id,
-#             'Content-Type': 'application/json; charset=utf-8',
-#             'Accept': 'text/event-stream'
-#         }
-#         ret = []
-#         with requests.post(self._host + '/testapp/v1/chat-completions/HCX-003',
-#                            headers=headers, json=completion_request, stream=True) as r:
-#             for line in r.iter_lines():
-#                 if line:
-#                     ret.append(line.decode("utf-8"))
-#         return ret
+    def execute(self, completion_request):
+        headers = {
+            'X-NCP-CLOVASTUDIO-API-KEY': self._api_key,
+            'X-NCP-APIGW-API-KEY': self._api_key_primary_val,
+            'X-NCP-CLOVASTUDIO-REQUEST-ID': self._request_id,
+            'Content-Type': 'application/json; charset=utf-8',
+            'Accept': 'text/event-stream'
+        }
+        ret = []
+        with requests.post(self._host + '/testapp/v1/chat-completions/HCX-003',
+                           headers=headers, json=completion_request, stream=True) as r:
+            for line in r.iter_lines():
+                if line:
+                    ret.append(line.decode("utf-8"))
+        return ret
 
-# def show_document_details(selected_date):
-#     selected_docs = merge_df[merge_df['date'] == selected_date]
+def show_document_details(selected_date):
+    selected_docs = merge_df[merge_df['date'] == selected_date]
 
-#     if not selected_docs.empty:
-#         for index, row in selected_docs.iterrows():
-#             title = row['title']
-#             st.subheader(title)
+    if not selected_docs.empty:
+        for index, row in selected_docs.iterrows():
+            title = row['title']
+            st.subheader(title)
 
-#             polarity_score = row['tone_doc']
-#             tone_label = 'Hawkish' if polarity_score > 0 else 'Dovish'
-#             st.subheader(f"Polarity Score: {polarity_score} ({tone_label})")
+            polarity_score = row['tone_doc']
+            tone_label = 'Hawkish' if polarity_score > 0 else 'Dovish'
+            st.subheader(f"Polarity Score: {polarity_score} ({tone_label})")
 
-#             col1, col2 = st.columns(2)
-#             content = row['content'].split('\n')
-#             col1.text_area('Content', '\n'.join(content[:5]), height=300)
+            col1, col2 = st.columns(2)
+            content = row['content'].split('\n')
+            col1.text_area('Content', '\n'.join(content[:5]), height=300)
 
-#             completion_executor = CompletionExecutor(
-#                 host='https://clovastudio.stream.ntruss.com',
-#                 api_key='NTA0MjU2MWZlZTcxNDJiY6o7O0mMGUuTEHU6yLaRpv/2IkicvAMe/Pab0BKS5gW8',
-#                 api_key_primary_val='gIAB8vXgHEn5ZwAEgBHbnj6qZVa45KdMxz85pTjT',
-#                 request_id='85faed7a-d6fc-413b-8858-513aeaebe9f1'
-#             )
+            completion_executor = CompletionExecutor(
+                host='https://clovastudio.stream.ntruss.com',
+                api_key='NTA0MjU2MWZlZTcxNDJiY6o7O0mMGUuTEHU6yLaRpv/2IkicvAMe/Pab0BKS5gW8',
+                api_key_primary_val='gIAB8vXgHEn5ZwAEgBHbnj6qZVa45KdMxz85pTjT',
+                request_id='85faed7a-d6fc-413b-8858-513aeaebe9f1'
+            )
 
-#             col2.write('금통위 의사록 내용 요약')
+            col2.write('금통위 의사록 내용 요약')
 
-#             minutes = row['content'][:500]
+            minutes = row['content'][:500]
 
-#             if minutes:
-#                 preset_text = [{"role": "system", "content": "- 데이터를 해독하고, 파싱하여 핵심 내용을 추출합니다."},
-#                                {"role": "user", "content": minutes}]
+            if minutes:
+                preset_text = [{"role": "system", "content": "- 데이터를 해독하고, 파싱하여 핵심 내용을 추출합니다."},
+                               {"role": "user", "content": minutes}]
 
-#                 request_data = {
-#                     'messages': preset_text,
-#                     'topP': 0.6,
-#                     'topK': 0,
-#                     'maxTokens': 500,
-#                     'temperature': 0.1,
-#                     'repeatPenalty': 1.2,
-#                     'stopBefore': [],
-#                     'includeAiFilters': True,
-#                     'seed': 0
-#                 }
+                request_data = {
+                    'messages': preset_text,
+                    'topP': 0.6,
+                    'topK': 0,
+                    'maxTokens': 500,
+                    'temperature': 0.1,
+                    'repeatPenalty': 1.2,
+                    'stopBefore': [],
+                    'includeAiFilters': True,
+                    'seed': 0
+                }
 
-#                 result = completion_executor.execute(request_data)
-#                 try:
-#                     result_text = json.loads(result[-4][5:])['message']['content']
-#                     col2.write(result_text)
-#                 except (IndexError, KeyError, json.JSONDecodeError) as e:
-#                     col2.error("Error in processing the response from the API")
+                result = completion_executor.execute(request_data)
+                try:
+                    result_text = json.loads(result[-4][5:])['message']['content']
+                    col2.write(result_text)
+                except (IndexError, KeyError, json.JSONDecodeError) as e:
+                    col2.error("Error in processing the response from the API")
 
-#             ngrams = row['ngrams'].split('\n')
-#             col1.text_area(f'Ngrams', '\n'.join(ngrams[:5]), height=330)
+            ngrams = row['ngrams'].split('\n')
+            col1.text_area(f'Ngrams', '\n'.join(ngrams[:5]), height=330)
 
-#             # Show h_cnt and d_cnt using Plotly bar chart
-#             h_cnt = row['h_cnt']
-#             d_cnt = row['d_cnt']
+            # Show h_cnt and d_cnt using Plotly bar chart
+            h_cnt = row['h_cnt']
+            d_cnt = row['d_cnt']
 
-#             fig = go.Figure()
+            fig = go.Figure()
 
-#             # 오른쪽 열: h_cnt와 d_cnt 막대 그래프
-#             fig.add_trace(go.Bar(x=['Hawkish', 'Dovish'], y=[h_cnt, d_cnt],
-#                                  marker_color=['red', 'blue']))  # h_cnt를 빨간색으로 설정
+            # 오른쪽 열: h_cnt와 d_cnt 막대 그래프
+            fig.add_trace(go.Bar(x=['Hawkish', 'Dovish'], y=[h_cnt, d_cnt],
+                                 marker_color=['red', 'blue']))  # h_cnt를 빨간색으로 설정
 
-#             fig.update_layout(title=f'Hawkish vs Dovish Count',
-#                               xaxis_title='Sentiment', yaxis_title='Count',
-#                               showlegend=False,
-#                               width=800, height=400)
+            fig.update_layout(title=f'Hawkish vs Dovish Count',
+                              xaxis_title='Sentiment', yaxis_title='Count',
+                              showlegend=False,
+                              width=400, height=400)
 
-#             # Plotly 차트를 Streamlit에 표시
-#             col2.plotly_chart(fig)
-#     else:
-#         st.warning(f"No documents found for {selected_date}. Please select another date.")
+            # Plotly 차트를 Streamlit에 표시
+            col2.plotly_chart(fig)
+    else:
+        st.warning(f"No documents found for {selected_date}. Please select another date.")
 
-# if __name__ == '__main__':
-#     # Streamlit code to select a date
-#     dates = merge_df['date'].unique()
-#     selected_date = st.sidebar.selectbox('Select a date', dates)
+if __name__ == '__main__':
+    # Streamlit code to select a date
+    dates = merge_df['date'].unique()
+    selected_date = st.sidebar.selectbox('Select a date', dates)
 
-#     if selected_date:
-#         show_document_details(selected_date)
+    if selected_date:
+        show_document_details(selected_date)
