@@ -10,11 +10,6 @@ import json
 import requests
 import datetime
 
-# 사이드바에 페이지 선택 옵션 설정
-# st.sidebar.markdown("[textmining](https://textminingproject.streamlit.app)")
-# st.sidebar.markdown("[dictionary](https://textminingdictionary.streamlit.app)")
-# st.sidebar.markdown("[MPK tone and BOK baserate](https://mpbtonebokbaserate.streamlit.app)")
-
 
 # CSV 파일 로드
 df = pd.read_csv('dict.csv')
@@ -220,7 +215,7 @@ def show_document_details(selected_date):
             fig.update_layout(title=f'Hawkish vs Dovish Count',
                               xaxis_title='Sentiment', yaxis_title='Count',
                               showlegend=False,
-                              width=400, height=400)
+                              width=380, height=400)
 
             # Plotly 차트를 Streamlit에 표시
             col2.plotly_chart(fig)
