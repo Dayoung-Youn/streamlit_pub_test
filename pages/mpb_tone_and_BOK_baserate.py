@@ -39,50 +39,51 @@ df2 = df2.dropna(subset=['tone_doc', 'baserate'])
 scaler = MinMaxScaler()
 df2[['tone_doc', 'baserate']] = scaler.fit_transform(df2[['tone_doc', 'baserate']])
 
+tab1, tab2 = st.tabs(['전체차트', '기간별 차트'])
 
 if df2.empty:
     st.error("DataFrame is empty after dropping NaN values. Please check your data.")
 else:
-    # 날짜 흐름에 따른 doc_tone과 base_rate의 선 그래프
-    st.header('금통위의사록 어조와 기준금리 변화')
-    df2 = df2.sort_values(by='date')
-    df2.reset_index(drop=True, inplace=True)
+    with tab1:
+        # 날짜 흐름에 따른 doc_tone과 base_rate의 선 그래프
+        st.header('금통위의사록 어조와 기준금리 변화')
+        df2 = df2.sort_values(by='date')
+        df2.reset_index(drop=True, inplace=True)
+    
+        # st.line_chart를 사용하여 선 그래프 그리기
+        st.line_chart(df2[['date', 'tone_doc', 'baserate']].set_index('date'), use_container_width=True)
 
-    # st.line_chart를 사용하여 선 그래프 그리기
-    st.line_chart(df2[['date', 'tone_doc', 'baserate']].set_index('date'), use_container_width=True)
-
-    #st.write(df2[['date', 'tone_doc', 'baserate']])
-
-    #기간 선택
-    df2['date'] = pd.to_datetime(df2['date'], format='%Y-%m-%d')
-
-    #st.title('금통위의사록 어조와 기준금리 변화')
-
-    col1, col2=st.columns(2)
-    min_date = datetime.date(2014, 3, 13)
-    max_date = datetime.date(2024, 5, 23)
-    default_date = datetime.date(2024, 5, 23)
-    if default_date < min_date or default_date > max_date:
-        default_date = min_date 
-
-    start_date = col1.date_input("시작 날짜", 
-                             value=default_date, 
-                             min_value=min_date, 
-                             max_value=max_date)
-
-    end_date = col2.date_input("종료 날짜", 
-                               value=default_date, 
-                               min_value=min_date, 
-                               max_value=max_date)
-
-
-    # 데이터프레임 필터링을 위한 마스크 생성
-    mask = (df2['date'] >= pd.Timestamp(start_date)) & (df2['date'] <= pd.Timestamp(end_date))
-    filtered_df = df2.loc[mask]
-
-    fig = px.line(filtered_df, x='date', y=['tone_doc', 'baserate'],
-                  labels={'value': '값', 'date': '날짜', 'variable': '변수'}, title='기간별 금통위의사록 어조와 기준금리 변화')
-    st.plotly_chart(fig, use_container_width=True)
+    with tab2:
+        #기간 선택
+        df2['date'] = pd.to_datetime(df2['date'], format='%Y-%m-%d')
+    
+        #st.title('금통위의사록 어조와 기준금리 변화')
+    
+        col1, col2=st.columns(2)
+        min_date = datetime.date(2014, 3, 13)
+        max_date = datetime.date(2024, 5, 23)
+        default_date = datetime.date(2024, 5, 23)
+        if default_date < min_date or default_date > max_date:
+            default_date = min_date 
+    
+        start_date = col1.date_input("시작 날짜", 
+                                 value=default_date, 
+                                 min_value=min_date, 
+                                 max_value=max_date)
+    
+        end_date = col2.date_input("종료 날짜", 
+                                   value=default_date, 
+                                   min_value=min_date, 
+                                   max_value=max_date)
+    
+    
+        # 데이터프레임 필터링을 위한 마스크 생성
+        mask = (df2['date'] >= pd.Timestamp(start_date)) & (df2['date'] <= pd.Timestamp(end_date))
+        filtered_df = df2.loc[mask]
+    
+        fig = px.line(filtered_df, x='date', y=['tone_doc', 'baserate'],
+                      labels={'value': '값', 'date': '날짜', 'variable': '변수'}, title='기간별 금통위의사록 어조와 기준금리 변화')
+        st.plotly_chart(fig, use_container_width=True)
 
 
 merge_df=pd.read_csv('minutes_new_count.csv')
