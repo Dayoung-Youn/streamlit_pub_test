@@ -171,7 +171,7 @@ def show_document_details(selected_date):
 
             fig = go.Figure()
             fig.add_trace(go.Bar(x=['Hawkish', 'Dovish'], y=[h_cnt, d_cnt],
-                                 marker_color=['red', 'blue']))  # h_cnt를 빨간색으로 설정
+                                 marker_color=['red', 'blue']))
 
             fig.update_layout(title=f'Hawkish vs Dovish Count',
                               xaxis_title='Sentiment', yaxis_title='Count',
@@ -185,7 +185,7 @@ def show_document_details(selected_date):
 if __name__ == '__main__':
     # Streamlit code to select a date
     dates = merge_df['date'].unique()
-    selected_date = st.sidebar.selectbox('날짜를 선택하세요', dates)
+    selected_date = st.sidebar.selectbox('보고싶은 의사록의 날짜를 선택하세요', dates)
 
     if selected_date:
         show_document_details(selected_date)
